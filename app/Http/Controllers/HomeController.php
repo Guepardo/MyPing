@@ -24,6 +24,7 @@ class HomeController extends Controller{
 
 		foreach($verifies as $verify){
 			$verify->site;  
+			$verify->status;
 			$verify->verification_at = Carbon::parse($verify->created_at)->diffForHumans(Carbon::now()); 
 		}
 
@@ -33,9 +34,10 @@ class HomeController extends Controller{
 	public function indicators(Request $request){
 		$verify_count = Verify::count(); 
 
-		$verify_fails = Verify::where('status','404')->
-		orWhere('status', '0')->
-		count(); 
+		$verify_fails = Verify::whereHas('status', function($query){
+			$query->where('code', '404'); 
+			$query->orWhere('code', '0'); 
+		})->count(); 
 
 		$person      = Person::count();  
 
@@ -48,14 +50,18 @@ class HomeController extends Controller{
 	}
 
 	public function recentFails(Request $request){
-		$fails = Verify::where('status','404')->
-		orWhere('status', '0')->
+		$fails = Verify::whereHas('status', function($query){
+			$query->where('code', '404'); 
+			$query->orWhere('code', '0'); 
+		})->
 		orderBy('created_at', 'desc')->
 		take(5)->
-		get();   	
+		get(); 
 
-		foreach($fails as $fail)
+		foreach($fails as $fail){
 			$fail->site;
+			$fail->load('status'); 
+		}
 
 		return ['status' => true, 'msg' => $fails]; 
 	}
@@ -63,8 +69,11 @@ class HomeController extends Controller{
 	public function getNotifications(Request $request){
 		$notifications = Notification::orderBy('created_at', 'desc')->get(); 
 
-		foreach($notifications as $not )
+		foreach($notifications as $not ){
 			$not->heppend_at = Carbon::parse($not->created_at)->diffForHumans(Carbon::now()); 
+			$not->verify->site->persons;
+			$not->verify->status; 
+		}
 		
 
 		return ['status' => true, 'msg' => $notifications]; 

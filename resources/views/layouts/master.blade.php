@@ -72,14 +72,14 @@
                                                 <i class="material-icons">error_outline</i>
                                             </div>
                                             <div class="menu-info">
-                                                <h4>New issue!</h4>
+                                                <h4>@{{notify.verify.site.label}}</h4>
                                                 <p>
                                                     <i class="material-icons">access_time</i> @{{notify.heppend_at}}
                                                 </p>
                                             </div>
                                         </a>
                                     </li>
-                                  
+
                                 </ul>
                             </li>
                             <li class="footer">
@@ -88,7 +88,7 @@
                         </ul>
                     </li>
                     <!-- #END# Notifications -->
-                 
+
                     <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
                 </ul>
             </div>
@@ -618,13 +618,37 @@
     </section>
 
     <section class="content">
-     @yield('content')
-    </section>
+       @yield('content')
+   </section>
 
-    <audio id="sound_effect">
-        <source src="sound/sound.mp3" type="">
+   <audio id="sound_effect">
+    <source src="sound/sound.mp3" type="">
     </audio>
-     {{-- Vue 2.0 --}}
+
+    {{-- Modal Issue --}}
+    <div class="modal fade" id="issue_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal_title"></h4>
+                </div>
+                <div class="modal-body" id="modal_body">
+                    <p></p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sodales orci ante, sed ornare eros vestibulum ut. Ut accumsan
+                    vitae eros sit amet tristique. Nullam scelerisque nunc enim, non dignissim nibh faucibus ullamcorper.
+                    Fusce pulvinar libero vel ligula iaculis ullamcorper. Integer dapibus, mi ac tempor varius, purus
+                    nibh mattis erat, vitae porta nunc nisi non tellus. Vivamus mollis ante non massa egestas fringilla.
+                    Vestibulum egestas consectetur nunc at ultricies. Morbi quis consectetur nunc.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal" >CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal Issue END--}}
+
+    {{-- Vue 2.0 --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
 
     @yield('js')
@@ -650,7 +674,7 @@
                     var self = this; 
 
                     this.is_refreshing = true; 
-                    $.post('/h/getNotifications',{}).
+                    $.post('/n/getNotifications',{}).
                     done(function(data){
                         self.notifications = data.msg;
                         self.is_refreshing = false; 
@@ -677,7 +701,46 @@
                 }, 
 
                 seeIssue: function(index){
-                    alert(index); 
+                    var issue = this.notifications[index]; 
+                    this.loadModal(issue); 
+                    
+                    
+
+                    var data = {
+                        id : issue.id
+                    }; 
+
+                    var self = this; 
+                    $.post('/n/setNotificationAsSeen',data). 
+                    done(function(data){
+                        if(data.status){
+                            self.notifications.splice(index, 1); 
+                            self.last_count--;
+                        }
+                    }); 
+                }, 
+
+                loadModal: function(notification){
+                    var verify = notification.verify; 
+                    var site   = verify.site; 
+                    var status = verify.status; 
+
+                    $('#modal_title').text(site.label+' ('+status.label+' '+status.code+')'); 
+
+                    var p1  = "<p>Issue Description: </p>"; 
+                    p1 += "<p>"+status.description+"</p>"; 
+
+                    p1 += "<p>Who was notified: </p> <ul>"; 
+
+                    for(var a = 0; a < site.persons.length; a++)
+                        p1 += "<li> "+site.persons[a].name+"</li>"; 
+
+                    p1 += "</ul>"; 
+                    
+                    p1 += "<p>Verified at: "+verify.created_at+"</p>"; 
+
+                    $('#modal_body').html(p1); 
+                    $('#issue_modal').modal('show'); 
                 }
             }, 
 

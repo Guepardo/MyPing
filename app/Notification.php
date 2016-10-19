@@ -8,8 +8,8 @@ class Notification extends Model{
    protected $table = 'notification'; 
    public    $timestamp = true;
 
-   public function verification(){
-   		return $this->hasOne('App\Verify'); 
+   public function verify(){
+   		return $this->belongsTo('App\Verify'); 
    }
 
    public function priority(){

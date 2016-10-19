@@ -3,9 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+
 use App\Site; 
 use App\Verify; 
 use App\Notification; 
+use App\Status; 
 
 use Carbon\Carbon; 
 use App\Utils\VerifyUrl; 
@@ -52,20 +54,24 @@ class Watcher extends Command
             if(true){
                 $this->info("Executar aqui ". $site->label. " label ". $site->priority->label); 
 
-                $status = VerifyUrl::verify($site->url); 
+                $statusCode = VerifyUrl::verify($site->url); 
                 // $this->info($status); 
 
                 //Saving verification
                 $verify = new Verify(); 
                 $verify->site_id = $site->id; 
-                $verify->status  = $status; 
+
+                $status = Status::where('code', $statusCode)->first();
+
+                $verify->status_id  = $status->id; 
                 $verify->save(); 
 
                 $site->last_seen = Carbon::now()->toDateTimeString(); 
                 $site->save(); 
 
                 //if status has been returned bad
-                if($status == 404 || $status == 0){
+                //Write an Enumeration to this. 
+                if($status->alert == 3 ){
                     $notification = new Notification(); 
 
                     $notification->user_id = 1; 

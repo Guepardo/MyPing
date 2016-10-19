@@ -57,7 +57,7 @@
             </div>
             <!-- #END# Widgets -->
             <!-- CPU Usage -->
-            <div class="row clearfix">
+            {{-- <div class="row clearfix">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="header">
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <!-- #END# CPU Usage -->
            
             <div class="row clearfix">
@@ -122,7 +122,7 @@
                                         <tr v-for="verify in verifies">
                                             <td>@{{ verify.id}}</td>
                                             <td>@{{ verify.site.label}}</td>
-                                            <td><span class="label" :class="[ (verify.status == '404' || verify == '0') ? 'bg-red' : 'bg-green']" >@{{verify.status}}</span></td>
+                                            <td><span class="label" :class="[ (verify.status.code == '404' || verify.status.code == '0') ? 'bg-red' : 'bg-green']" >@{{verify.status.label +" - "+ verify.status.code}}</span></td>
                                             <td>@{{verify.verification_at}}</td>
                                         </tr>
                                         
@@ -164,7 +164,7 @@
                                         <tr v-for="fail in fails">
                                             <td>@{{ fail.id}}</td>
                                             <td>@{{ fail.site.label}}</td>
-                                            <td><span class="label bg-red">@{{fail.status}}</span></td>
+                                            <td><span class="label bg-red">@{{fail.status.label +" - "+ fail.status.code}}</span></td>
                                         </tr>
                                         
                                     </tbody>
