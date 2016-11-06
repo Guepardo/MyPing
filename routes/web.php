@@ -10,17 +10,15 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-use Carbon\Carbon; 
-use Telegram\Bot\Api; 
-use App\Status; 
-use App\Verify; 
+// use Carbon\Carbon; 
+// use Telegram\Bot\Api; 
+// use App\Status; 
+// use App\Verify; 
 
 Route::get('/teste', function(){
 	// $s = Status::all(); 
-
 	// foreach($s as $b)
 	// 		$b->verifies; 
-
 	// return $s; 
 
 	$v = Verify::whereDoesntHave('status', function($query){
@@ -44,8 +42,6 @@ Route::group(['prefix' => 'n'], function(){
 	Route::post('getNotifications'     , 'NotificationController@getNotifications'); 
 	Route::post('setNotificationAsSeen', 'NotificationController@setNotificationAsSeen'); 
 }); 
-
-
 
 
 
