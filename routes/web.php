@@ -31,7 +31,6 @@ Route::get('/teste', function(){
 		take(5)->
 		get(); 
 
-
 	foreach($v as $n){
 		$n->site;
 		$n->load('status'); 
@@ -66,7 +65,6 @@ Route::get('/login','AuthController@index');
 //Route group to verification
 Route::get('/verification'           , 'VerificationController@index'); 
 Route::get('/verification/delete/{id}', 'VerificationController@delete'); 
-
 Route::group(['prefix' => 'v'], function(){
 	Route::post('create', 'VerificationController@create'); 
 }); 
@@ -78,7 +76,6 @@ Route::group(['prefix' => 'v'], function(){
 //Route group to persons
 Route::get('/team'        	  , 'PersonController@index'); 
 Route::get('/team/delete/{id}', 'PersonController@delete'); 
-
 Route::group(['prefix' => 'p'], function(){
 	Route::post('/create', 'PersonController@create'); 
 }); 
