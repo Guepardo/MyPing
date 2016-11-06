@@ -65,18 +65,4 @@ class HomeController extends Controller{
 
 		return ['status' => true, 'msg' => $fails]; 
 	}
-
-	public function getNotifications(Request $request){
-		$notifications = Notification::orderBy('created_at', 'desc')->get(); 
-
-		foreach($notifications as $not ){
-			$not->heppend_at = Carbon::parse($not->created_at)->diffForHumans(Carbon::now()); 
-			$not->verify->site->persons;
-			$not->verify->status; 
-		}
-		
-
-		return ['status' => true, 'msg' => $notifications]; 
-	}
-
 }
