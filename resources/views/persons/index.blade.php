@@ -61,12 +61,22 @@
 								</td>
 								
 								<td>
-									<i class="material-icons">clear</i>
+									<a href="{{ '/team/delete/'.$p->id}}">
+										<i class="material-icons">clear</i>
+									</a>
 								</td>
 							</tr>
 							@endforeach
 						</tbody>
 					</table>
+
+					{{-- Info for delete action  --}}
+					@if (session('status'))
+					<div class="alert alert-warning">
+						{{ session('status') }}
+					</div>
+					@endif
+					{{-- Info for delete action --}}
 				</div>
 			</div>
 		</div>
@@ -85,12 +95,12 @@
 			{{-- Form --}}
 
 			<form method="post" action="/p/create" id="form" >
-			<input type="hidden" name="_token" value="{{ csrf_token() }}">
+				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 				<div class="col-sm-12" style="padding:25px">
 					<div class="form-group">
 						<div class="form-line">
-						<input type="text" name="name" class="form-control" placeholder="Name" />
+							<input type="text" name="name" class="form-control" placeholder="Name" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -99,11 +109,11 @@
 						</div>
 					</div>
 				</div>
-			
-			<div class="modal-footer">
-				<button type="submit" class="btn btn-link waves-effect">SAVE CHANGES</button>
-				<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
-			</div>
+
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-link waves-effect">SAVE CHANGES</button>
+					<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+				</div>
 			</form>
 			{{-- Form-end --}}
 		</div>
@@ -193,18 +203,18 @@
 		
 		$.post('/p/create',data). 
 		done(function(data){
-			 swal({
-			 	title: 'Success!', 
-			 	text : 'Registred', 
-			 	type : 'success'
-			 });
+			swal({
+				title: 'Success!', 
+				text : 'Registred', 
+				type : 'success'
+			});
 
-			 setTimeout(function(){
-			 	location.reload(); 
-			 },1500); 
+			setTimeout(function(){
+				location.reload(); 
+			},1500); 
 
 		}).fail(function(data){
-			 swal("Fail Alert!", "No hope");
+			swal("Fail Alert!", "No hope");
 		})
 
 		event.preventDefault();

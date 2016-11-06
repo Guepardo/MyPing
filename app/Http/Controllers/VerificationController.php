@@ -52,4 +52,18 @@ class VerificationController extends Controller{
     	
         return ['status' => true ]; 
     }
+
+    public function delete($id){
+        $site = Site::find($id); 
+
+        if(empty($site))
+            return redirect('/verification')->with('status', 'This id doesnot exists'); 
+
+        if( count($site->persons) > 0 )
+            return redirect('/verification')->with('status', 'This site has relation with some persons'); 
+
+        $site->delete(); 
+
+        return redirect('/verification')->with('status', 'Successful'); 
+    }
 }

@@ -33,4 +33,18 @@ class PersonController extends Controller{
 
    		return [ 'status' => true ]; 
    }
+
+   public function delete($id){
+      $person = Person::find($id); 
+      
+      if(empty($person))
+         return redirect('/team')->with('status', 'This is id doesnt exists'); 
+
+      if(count($person->sites) > 0 )
+         return redirect('/team')->with('status', 'This person has relation with some sites.'); 
+
+      $person->delete(); 
+      
+      return redirect('/team')->with('status', 'Successful.'); 
+   } 
 }

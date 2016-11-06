@@ -64,12 +64,21 @@
 								</td>
 								
 								<td>
+									<a href="{{ '/verification/delete/'. $s->id}}">
 									<i class="material-icons">clear</i>
+									</a>
 								</td>
 							</tr>
 							@endforeach
 						</tbody>
 					</table>
+					{{-- Info for delete action --}}
+					@if(session('status'))
+						<div class="alert alert-warning">
+							{{session('status')}}
+						</div>
+					@endif
+					{{-- Info for delete action --}}
 				</div>
 			</div>
 		</div>
