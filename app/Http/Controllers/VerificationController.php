@@ -35,9 +35,9 @@ class VerificationController extends Controller{
 
     public function create(Request $request){    	
     	$this->validate($request,[
-    		'label' => 'required', 
-    		'url'   => 'required', 
-            'persons_id' => 'required', 
+    		'label'       => 'required', 
+    		'url'         => 'required', 
+            'persons_id'  => 'required', 
     		'priority_id' => 'required'
     	]); 
 

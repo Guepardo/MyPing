@@ -20,7 +20,7 @@ class PersonController extends Controller{
    public function create(Request $request){
    		
    		$this->validate($request,[
-   			'name' => 'required',
+   			'name'        => 'required',
    			'telegram_id' => 'required'
    		]); 
 
