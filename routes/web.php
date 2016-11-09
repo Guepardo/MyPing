@@ -55,23 +55,21 @@ Route::group(['prefix' => 'h'], function(){
 Route::get('/login','AuthController@index'); 
 
 
-
-
-
 //Route group to verification
 Route::get('/verification'           , 'VerificationController@index'); 
-Route::get('/verification/delete/{id}', 'VerificationController@delete'); 
 Route::group(['prefix' => 'v'], function(){
+	Route::get('delete/{id}', 'VerificationController@delete'); 
+	Route::get('get/{id}'   , 'VerificationController@getSiteById');
+
 	Route::post('create', 'VerificationController@create'); 
 }); 
 
 
-
-
-
 //Route group to persons
 Route::get('/team'        	  , 'PersonController@index'); 
-Route::get('/team/delete/{id}', 'PersonController@delete'); 
 Route::group(['prefix' => 'p'], function(){
-	Route::post('/create', 'PersonController@create'); 
+	Route::get('delete/{id}', 'PersonController@delete'); 
+	Route::get('get/{id}'   , 'PersonController@getPersonById'); 
+
+	Route::post('create', 'PersonController@create'); 
 }); 

@@ -9,14 +9,14 @@
 	</div>
 
 	<!-- Basic Examples -->
-	<div class="row clearfix">
+	<div class="row clearfix" id="body">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			<div class="card">
 				<div class="header">
 					
 					{{-- Buttons --}}
 
-					<button type="button" class="btn btn-success waves-effect btn-lg" data-toggle="modal" data-target="#novo_site">New Person</button>
+					<button type="button" class="btn btn-success waves-effect btn-lg" v-on:click="newRegister">New Person</button>
 
 
 					{{-- Buttons-end --}}
@@ -57,11 +57,13 @@
 								<td>{{ count($p->sites) }}</td>
 
 								<td>
-									<i class="material-icons">edit</i>
+									<a  v-on:click="editRegister({{$p->id}})" >
+										<i class="material-icons">edit</i>
+									</a>
 								</td>
 								
 								<td>
-									<a href="{{ '/team/delete/'.$p->id}}">
+									<a href="{{ '/p/delete/'.$p->id}}">
 										<i class="material-icons">clear</i>
 									</a>
 								</td>
@@ -94,18 +96,18 @@
 			</div>
 			{{-- Form --}}
 
-			<form method="post" action="/p/create" id="form" >
-				<input type="hidden" name="_token" value="{{ csrf_token() }}">
+			<form v-on:submit.stop.prevent="register" id="form" >
+				{{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
 
 				<div class="col-sm-12" style="padding:25px">
 					<div class="form-group">
 						<div class="form-line">
-							<input type="text" name="name" class="form-control" placeholder="Name" />
+							<input type="text" name="name" v-model="name" class="form-control" placeholder="Name" />
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="form-line">
-							<input type="text" name="telegram_id" class="form-control" placeholder="Telegram Id" />
+							<input type="text" name="telegram_id" v-model="telegram_id" class="form-control" placeholder="Telegram Id" />
 						</div>
 					</div>
 				</div>
@@ -196,29 +198,103 @@
 <!-- Demo Js -->
 <script src="js/demo.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.js"></script>
+
 <script type="text/javascript">
 	//handle form
-	$('#form').submit(function(event){
-		var data = $(this).serializeArray(); 
+	// $('#form').submit(function(event){
+	// 	var data = $(this).serializeArray(); 
 		
-		$.post('/p/create',data). 
-		done(function(data){
-			swal({
-				title: 'Success!', 
-				text : 'Registred', 
-				type : 'success'
-			});
+	// 	$.post('/p/create',data). 
+	// 	done(function(data){
+	// 		swal({
+	// 			title: 'Success!', 
+	// 			text : 'Registred', 
+	// 			type : 'success'
+	// 		});
 
-			setTimeout(function(){
-				location.reload(); 
-			},1500); 
+	// 		setTimeout(function(){
+	// 			location.reload(); 
+	// 		},1500); 
 
-		}).fail(function(data){
-			swal("Fail Alert!", "No hope");
-		})
+	// 	}).fail(function(data){
+	// 		swal("Fail Alert!", "No hope");
+	// 	})
 
-		event.preventDefault();
-	})	
+	// 	event.preventDefault();
+	// }); 
+
+
+	var modal   = new Vue({
+		el: '#novo_site', 
+
+		data: {
+			// person: {}, 
+			name : '', 
+			telegram_id: '', 
+			id: -1
+		}, 
+
+		methods:{
+			register: function(){
+				var data = $('#form').serializeArray(); 
+		
+				$.post('/p/create',data). 
+				done(function(data){
+					swal({
+						title: 'Success!', 
+						text : 'Registred', 
+						type : 'success'
+					});
+
+					setTimeout(function(){
+						location.reload(); 
+					},1500); 
+
+				}).fail(function(data){
+					swal("Fail Alert!", "No hope");
+				}); 
+			}, 
+
+			populateModal: function(id){
+				var self = this; 
+
+				$.get('/p/get/'+ id).
+				done(function(data){
+					console.log(data); 
+					if(data.status){
+						self.name        = data.msg.name; 
+						self.telegram_id = data.msg.telegram_id; 
+						self.id    	     = data.msg.id; 
+						$('#novo_site').modal({show : true}); 
+					}
+				}); 
+
+			}
+		}
+	}); 
+
+	var buttons = new Vue({
+		el: '#body', 
+
+		data:{
+
+		},
+
+		created: function(){
+
+		}, 
+
+		methods:{
+			newRegister: function(){
+				$('#novo_site').modal({show : true});  
+			}, 
+
+			editRegister: function(id){
+				modal.populateModal(id); 
+			}
+		}
+	}); 
 </script>
 
 @stop

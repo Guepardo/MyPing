@@ -47,4 +47,9 @@ class PersonController extends Controller{
       
       return redirect('/team')->with('status', 'Successful.'); 
    } 
+
+   public function getPersonByid($id){
+      $person = Person::find($id); 
+      return [ 'status' => true, 'msg' => $person]; 
+   }
 }

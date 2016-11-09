@@ -64,7 +64,7 @@
 								</td>
 								
 								<td>
-									<a href="{{ '/verification/delete/'. $s->id}}">
+									<a href="{{ '/v/delete/'. $s->id}}">
 									<i class="material-icons">clear</i>
 									</a>
 								</td>

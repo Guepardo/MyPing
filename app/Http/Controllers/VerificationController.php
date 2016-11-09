@@ -66,4 +66,9 @@ class VerificationController extends Controller{
 
         return redirect('/verification')->with('status', 'Successful'); 
     }
+
+    public function getSiteById($id){
+        $site = Site::find($id); 
+        return ['status' => true, 'msg' => $site]; 
+    }
 }
